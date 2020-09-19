@@ -1,88 +1,27 @@
 # Docker GRASS GIS (Ubuntu Linux)
 
-Dockerfile with an [Ubuntu Linux](https://ubuntu.com/) image with
-[GRASS GIS](https://grass.osgeo.org/), [PDAL](https://pdal.io) support and
-[grass-session](https://github.com/zarch/grass-session/).
+## Release Image: GUI and FFTools Addon installed
 
-Download size of this image is of approximately 2.6 GB.
+Dockerfile: `Dockerfile_ubuntu_fftools`
 
-Clone this repository and change directory:
-
-```bash
-git clone https://github.com/OSGeo/grass.git
-cd grass
+* Build
+```
+docker build -f docker/ubuntu/Dockerfile_ubuntu_fftools -t grass-fftools:stable-ubuntu .
+```
+* Run
+```
+docker run -it --user=$(id -u $USER):$(id -g $USER) --env="DISPLAY" --workdir="/home/$USER" --volume="/home/$USER:/home/$USER" --volume="/etc/group:/etc/group:ro" --volume="/etc/passwd:/etc/passwd:ro" --volume="/etc/shadow:/etc/shadow:ro" --volume="/etc/sudoers.d:/etc/sudoers.d:ro" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" grass-fftools:stable-ubuntu grass --gui
 ```
 
-## Ubuntu stable
+## Development: GUI and GRASS_ADDON_PATH set to local repo dir fftools 
 
-__Build the docker with__:
+Dockerfile: `Dockerfile_ubuntu_fftools_dev`
 
-```bash
-docker build \
-         --file docker/ubuntu/Dockerfile_ubuntu_pdal \
-         --tag grass-py3-pdal:stable-ubuntu .
+* Build
 ```
-
-View the images available using `sudo docker images` and open a bash terminal
-with:
-
-```bash
-$ docker run -it grass-py3-pdal:stable-ubuntu /bin/bash
-bash-5.0#
+docker build -f docker/ubuntu/Dockerfile_ubuntu_fftools_dev -t grass-fftools-dev:stable-ubuntu .
 ```
-
-__To build a stable version__:
-
-change to the releasebranch or tag you want to build:
-
-```bash
-git checkout remotes/origin/releasebranch_7_8
+* Run
 ```
-
-and build and enter with:
-
-```bash
-$ docker build \
-         -f docker/ubuntu/Dockerfile_ubuntu_pdal \
-         -t grass-py3-pdal:stable-ubuntu .
-
-$ docker run -it grass-py3-pdal:stable-ubuntu /bin/bash
-bash-5.0#
-```
-
-## Ubuntu latest
-
-__Build the docker with__:
-
-```bash
-$ docker build \
-         --file docker/ubuntu/Dockerfile_ubuntu_latest_pdal \
-         --tag grass-py3-pdal:latest-ubuntu .
-```
-
-View the images available using `sudo docker images` and open a bash terminal
-with:
-
-```bash
-$ docker run -it grass-py3-pdal:latest-ubuntu /bin/bash
-bash-5.0#
-```
-
-__To build a latest version__:
-
-change to the releasebranch or tag you want to build:
-
-```bash
-git checkout remotes/origin/releasebranch_7_8
-```
-
-and build and enter with:
-
-```bash
-$ docker build \
-         -f docker/ubuntu/Dockerfile_ubuntu_latest_pdal \
-         -t grass-py3-pdal:latest-ubuntu .
-
-$ docker run -it grass-py3-pdal:latest-ubuntu /bin/bash
-bash-5.0#
+docker run -it --user=$(id -u $USER):$(id -g $USER) --env="DISPLAY" --workdir="/home/$USER" --volume="/home/$USER:/home/$USER" --volume="/etc/group:/etc/group:ro" --volume="/etc/passwd:/etc/passwd:ro" --volume="/etc/shadow:/etc/shadow:ro" --volume="/etc/sudoers.d:/etc/sudoers.d:ro" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" grass-fftools-dev:stable-ubuntu grass --gui
 ```

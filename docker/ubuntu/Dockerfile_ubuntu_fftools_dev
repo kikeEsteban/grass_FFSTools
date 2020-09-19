@@ -75,7 +75,27 @@ RUN apt-get update && apt-get upgrade -y && \
     vim \
     wget \
     zip \
-    zlib1g-dev
+    zlib1g-dev \
+    gir1.2-notify-0.7 \ 
+    libnotify-bin \ 
+    libnotify-dev \
+    libnotify-doc \
+    libnotify4 \
+    libgtk-3-0 \
+    libsdl1.2debian \
+    libsdl-gfx1.2-5 \
+    libsdl-gfx1.2-dev \
+    libsdl-gfx1.2-doc \
+    libsdl-image1.2 \
+    libsdl-image1.2-dev \
+    libsdl-mixer1.2 \
+    libsdl-mixer1.2-dev \
+    libsdl-net1.2 \
+    libsdl-net1.2-dev \
+    libsdl-sound1.2 \
+    libsdl-sound1.2-dev \
+    libsdl-ttf2.0-0 \
+    libsdl-ttf2.0-dev
 
 RUN echo LANG="en_US.UTF-8" > /etc/default/locale
 RUN echo en_US.UTF-8 UTF-8 >> /etc/locale.gen && locale-gen
@@ -171,6 +191,7 @@ ENV CXXFLAGS "$MYCXXFLAGS"
 # Configure compile and install GRASS GIS
 ENV GRASS_PYTHON=/usr/bin/python3
 ENV NUMTHREADS=4
+RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN make distclean || echo "nothing to clean"
 RUN /src/grass_build/configure \
   --with-cxx \
@@ -228,12 +249,14 @@ WORKDIR /scripts
 
 # install external GRASS GIS session Python API
 RUN pip3 install grass-session
+RUN pip3 install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
+RUN pip3 install https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython-4.0.3-cp36-cp36m-linux_x86_64.whl
 
 # install GRASS GIS extensions
 RUN grass --tmp-location EPSG:4326 --exec g.extension extension=r.in.pdal
 
 # add GRASS GIS envs for python usage
-ENV GISBASE "/usr/local/grass/"
+ENV GISBASE "/usr/local/grass"
 ENV GRASSBIN "/usr/local/bin/grass"
 ENV PYTHONPATH "${PYTHONPATH}:$GISBASE/etc/python/"
 ENV LD_LIBRARY_PATH "$LD_LIBRARY_PATH:$GISBASE/lib"
