@@ -1,110 +1,53 @@
-[![Build Status](https://travis-ci.com/OSGeo/grass.svg?branch=master)](https://travis-ci.com/OSGeo/grass)
 
-# GRASS GIS Repository
+# GRASS FFTools
 
-## Description
+A fork of the fabulous Grass GIS software, to allow docker GUI installation in Linux and Windows, with ready to use FFSTool Addons (Factum Foundation Surface Tools) to process Lucida and photogrammetry depthmaps produced by Factum Foundation and related projects. 
 
-GRASS GIS ([https://grass.osgeo.org/](https://grass.osgeo.org/)) is
-a Geographic Information System used for geospatial data management and
-analysis, image processing, graphics/map production, spatial modeling, and
-visualization.
+## Grass GIS
 
-## How to get write access here
+Source project: https://github.com/OSGeo/grass
 
-In general: you don't really need write access as you can simply open
-a [pull request](https://github.com/OSGeo/grass/pulls) to contribute to
-GRASS GIS. See [CONTRIBUTING file](CONTRIBUTING.md) for more details.
+## Release Image: GUI support and FFTools Addon installed
 
-Want to become a core developer? See
-[Procedure for gaining Git write access](https://trac.osgeo.org/grass/wiki/HowToContribute#WriteaccesstotheGRASScorerepository)
+The build is intented to provide Grass GUI with FFTools Addon already imported and ready to be used.
+Dockerfile: `Dockerfile_ubuntu_fftools`
 
-## How to compile GRASS
-
-> See INSTALL file.
-
-Yes, you should really read [INSTALL](INSTALL). In addition, there are detailed [compile instructions](https://grasswiki.osgeo.org/wiki/Compile_and_Install) in the Wiki.
-
-## Docker
-
-Build a docker image using the downloaded source code (run this in the directory 
-containing the source code):
-
+* Build
 ```
-docker build -t grassgis78 .
+docker build -f docker/ubuntu/Dockerfile_ubuntu_fftools -t grass-fftools:stable-ubuntu .
+```
+* Run
+```
+docker run -it --user=$(id -u $USER):$(id -g $USER) --env="DISPLAY" --workdir="/home/$USER" --volume="/home/$USER:/home/$USER" --volume="/etc/group:/etc/group:ro" --volume="/etc/passwd:/etc/passwd:ro" --volume="/etc/shadow:/etc/shadow:ro" --volume="/etc/sudoers.d:/etc/sudoers.d:ro" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" grass-fftools:stable-ubuntu grass --gui
 ```
 
-A test run (assuming you have the existing GRASS GIS test location; it can be
-downloaded from
-[here](https://grass.osgeo.org/sampledata/north_carolina/nc_basic_spm_grass7.zip))
+## Development Image: GUI support and GRASS_ADDON_PATH set to local repo folder `fftools` 
 
+This build provide Grass GUI with the ´fftools´ folder set as the ADDONs path, to develop on local folder and update the module code in real time while using Grass.
+Once the modules are validated and tested, release build can be done for integration and delivery to users via Dockerhub (see above) 
+Dockerfile: `Dockerfile_ubuntu_fftools_dev`
+
+* Build
 ```
-# case 1: launching in the grassdata directory in which the location is stored:
-docker run -it --rm --user=$(id -u):$(id -g) --volume $(pwd):/data \
-    --env HOME=/data/ grassgis78 grass --text nc_basic_spm_grass7/user1 \
-        --exec g.region -p
-
-# case 2: launching anywhere
-docker run -it --rm --user=$(id -u):$(id -g) \
-    --volume /your/test/grassdata/:/data --env HOME=/data/ grassgis78 \
-        grass /data/nc_basic_spm_grass7/PERMANENT --exec g.region -p
+docker build -f docker/ubuntu/Dockerfile_ubuntu_fftools_dev -t grass-fftools-dev:stable-ubuntu .
 ```
-
-Note that the first `grassgis78` is the name of the image while the second
-`grass` is the name of the executable.
-
-To run the tests (again assuming local location):
-
+* Run
 ```
-docker run -it --rm --user=$(id -u):$(id -g) \
-    --volume /your/test/grassdata/:/data --env HOME=/data/ -w /code/grass \
-        grassgis78 grass /data/nc_basic_spm_grass7/PERMANENT --exec \
-            python -m grass.gunittest.main \
-                --location nc_basic_spm_grass7 --location-type nc
+docker run -it --user=$(id -u $USER):$(id -g $USER) --env="DISPLAY" --workdir="/home/$USER" --volume="/home/$USER:/home/$USER" --volume="/etc/group:/etc/group:ro" --volume="/etc/passwd:/etc/passwd:ro" --volume="/etc/shadow:/etc/shadow:ro" --volume="/etc/sudoers.d:/etc/sudoers.d:ro" --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" grass-fftools-dev:stable-ubuntu grass --gui
 ```
 
-Note: If you compiled locally before building the Docker image, you may
-encounter problems as the local configuration and locally compiled file
-are copied to and used in the Docker image. To make sure you don't have
-this issue, clean all the compiled files from the source code:
+## Pull Image and run on Windows
 
-```
-make distclean
-```
+### TODO: Upload docker image to dockerhub
 
-## How to generate the 'Programmer's Manual'
+### References: 
 
-You can generate locally the [GRASS GIS Programmer's Manual](https://grass.osgeo.org/programming7/).
+* [Running Ubuntu dockers on Windows hosts](https://ubuntu.com/tutorials/windows-ubuntu-hyperv-containers#1-overview) 
+* [Running GUI Linux Docker on Windows host](https://dev.to/darksmile92/run-gui-app-in-linux-docker-container-on-windows-host-4kde)
 
-This needs doxygen (<http://www.doxygen.org>) and optionally
-Graphviz dot (<http://www.research.att.com/sw/tools/graphviz/>).
+## Addon library
 
-To build the GRASS programmer's documentation, run
-
-```
-make htmldocs
-```
-
-or to generate documentation as single html file
-(recommended for simple reading)
-
-```
-make htmldocs-single
-```
-
-here. This takes quite some time. The result is in `lib/html/index.html`
-which refers to further document repositories in
-
-```
-lib/vector/html/index.html
-lib/db/html/index.html
-lib/gis/html/index.html
-```
-
-The master file is: `./grasslib.dox` where all sub-documents have to
-be linked into.
-
-To generate the documents in PDF format, run
-
-```
-make pdfdocs
-```
+References: 
+* [Grass development wiki](https://grasswiki.osgeo.org/wiki/Development)
+* [Grass Compile and Install Addons wiki](https://grasswiki.osgeo.org/wiki/Compile_and_Install#Addons)
+* [Official Grass Addons repository](https://github.com/OSGeo/grass-addons)
