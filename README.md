@@ -3,9 +3,9 @@
 
 A fork of the fabulous Grass GIS software, to allow docker GUI installation in Linux and Windows, with ready to use FFSTool Addons (Factum Foundation Surface Tools) to process Lucida and photogrammetry depthmaps produced by Factum Foundation and related projects. 
 
-**WARNING : Current working branch is releasebranch_7_8**
+**WARNING : Current working branch is grass_7_8_fftools_dev**
 
-First of all please do `git checkout remotes/origin/releasebranch_7_8`
+First of all please do `git checkout remotes/origin/grass_7_8_fftools_dev `
 
 ## Grass GIS
 
