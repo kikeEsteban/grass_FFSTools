@@ -42,7 +42,7 @@ docker run -it --user=$(id -u $USER):$(id -g $USER) --env="DISPLAY" --workdir="/
 
 ### Steps
 1. Install Docker
-2- Install choco: https://chocolatey.org/install
+2. Install choco: https://chocolatey.org/install
 3. Install VcXsrv with choco: Using administrator Powershell `choco install vcxsrv`
 4. Run Xlaunch and configure it as shown in https://dev.to/darksmile92/run-gui-app-in-linux-docker-container-on-windows-host-4kde
 5. Download/Build Grass FFTools image
