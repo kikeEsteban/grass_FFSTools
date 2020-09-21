@@ -40,6 +40,15 @@ docker run -it --user=$(id -u $USER):$(id -g $USER) --env="DISPLAY" --workdir="/
 
 ### TODO: Upload docker image to dockerhub
 
+### Steps
+1. Install Docker
+2- Install choco: https://chocolatey.org/install
+3. Install VcXsrv with choco: Using administrator Powershell `choco install vcxsrv`
+4. Run Xlaunch and configure it as shown in https://dev.to/darksmile92/run-gui-app-in-linux-docker-container-on-windows-host-4kde
+5. Download/Build Grass FFTools image
+6. Set Display env var: `set-variable -name DISPLAY -value 10.11.128.118:0.0` (get IP for Docker with ifconfig)
+6. Run it `docker run -ti --rm -e DISPLAY=$DISPLAY firefox`
+
 ### References: 
 
 * [Running Ubuntu dockers on Windows hosts](https://ubuntu.com/tutorials/windows-ubuntu-hyperv-containers#1-overview) 
